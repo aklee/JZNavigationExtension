@@ -62,3 +62,10 @@
 - (void)setNavigationBarBackgroundHidden:(BOOL)navigationBarBackgroundHidden animated:(BOOL)animated NS_AVAILABLE_IOS(8_0); // Hide or show the navigation bar background. If animated, it will transition vertically using UINavigationControllerHideShowBarDuration.
 
 @end
+
+
+/*设置默认leftItem外形*/
+@interface UINavigationItem(JZExtension)
+
+@end
+

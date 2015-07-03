@@ -353,3 +353,53 @@
 }
 
 @end
+
+
+
+
+
+@implementation UINavigationItem(AK)
+
+#pragma Swizzling
+
++(void)load{
+    
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        
+        SEL m1= @selector(backBarButtonItem);
+        SEL m2=@selector(myCustomBackButton_backBarButtonItem);
+        
+        Method originMethod=class_getInstanceMethod(self, m1);
+        Method destMethod=class_getInstanceMethod(self, m2);
+        method_exchangeImplementations(originMethod, destMethod);
+        
+        
+    });
+}
+
+
+static char kCustomBackButtonKey ;
+
+-(UIBarButtonItem*)myCustomBackButton_backBarButtonItem{
+    
+    //    NSLog(@"myCustomBackButton_backBarButtonItem");
+    
+    UIBarButtonItem*item=[self myCustomBackButton_backBarButtonItem];
+    if (item) {
+        return item;
+    }
+    item=objc_getAssociatedObject(self, &kCustomBackButtonKey);
+    if (!item) {
+        item=[[UIBarButtonItem alloc]initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:NULL];
+        objc_setAssociatedObject(self, &kCustomBackButtonKey, item, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    return item;
+}
+
+
+-(void)dealloc{
+    objc_removeAssociatedObjects(self);
+}
+
+@end
